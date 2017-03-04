@@ -2,12 +2,36 @@
 
 @section('content')
 
-	<div id="presenter-video-container">
-		
-	</div>
+	<style>
+		#presenter-video-container > video {
+			width: 600px;
+		}
+		#remote-video-container > div {
+			display: inline-flex;
+			height: 200px;
+		}
+	</style>
 
-	<div id="remote-video-container">
-		
+	<div class="container">
+		<div class="row">
+			<div class="col-md-10 col-md-offset-1">
+				<div class="panel panel-default">
+	                <div class="panel-heading">Conference Demo</div>
+
+	                <div class="panel-body">
+
+						<div class="row text-center">
+							<div id="presenter-video-container"></div>
+						</div>
+
+						<div class="row text-center">
+							<div id="remote-video-container"></div>
+						</div>
+
+	                </div>
+	            </div>
+			</div>
+		</div>
 	</div>
 
 @endsection
@@ -17,7 +41,7 @@
 	<script src="{{ asset('public/sdk/video.js') }}"></script>
 
 	<script>
-		VideoConference.init(
+		var video = VideoConference.init(
 			'{{ Auth::user()->api_token }}',
 			'some-room',
 			'presenter-video-container',

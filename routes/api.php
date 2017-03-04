@@ -1,13 +1,36 @@
 <?php
 
+use Twilio\Jwt\AccessToken;
+use Twilio\Jwt\Grants\VideoGrant;
+
 Route::group(['middleware' => 'auth:api'], function () {
 
 	Route::group(['prefix' => 'conference'], function () {
 
 		Route::post('connect', function () {
+
+			$appName = 'TwilioTest';
+			$TWILIO_ACCOUNT_SID = 'ACe4f94175c64ccfc9b1266ce7759aac1f';
+			$TWILIO_CONFIGURATION_SID = 'VS54ab6f1e5e6a9c0da458cfaae5eca01c';
+			$TWILIO_API_KEY = 'SK5ab6355f3157cc6c635e8072601f1c49';
+			$TWILIO_API_SECRET = 'Tq6B2qleTK9NI2PL0DrxGqtOTNQHJ3f9';
+
+			$token = new AccessToken(
+			    $TWILIO_ACCOUNT_SID, 
+			    $TWILIO_API_KEY,
+			    $TWILIO_API_SECRET, 
+			    3600,
+			    time()
+			);
+
+			$grant = new VideoGrant();
+			$grant->setConfigurationProfileSid($TWILIO_CONFIGURATION_SID);
+			$token->addGrant($grant);
+			$token = $token->toJWT();
+
 			return [
 				'status' => true,
-				'jwt' => 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiIsImN0eSI6InR3aWxpby1mcGE7dj0xIn0.eyJqdGkiOiJTSzVhYjYzNTVmMzE1N2NjNmM2MzVlODA3MjYwMWYxYzQ5LTE0ODg2NjAxNzAiLCJpc3MiOiJTSzVhYjYzNTVmMzE1N2NjNmM2MzVlODA3MjYwMWYxYzQ5Iiwic3ViIjoiQUNlNGY5NDE3NWM2NGNjZmM5YjEyNjZjZTc3NTlhYWMxZiIsImV4cCI6MTQ4ODY2Mzc3MCwiZ3JhbnRzIjp7ImlkZW50aXR5IjoxNDg4NjYwMTcwLCJ2aWRlbyI6eyJjb25maWd1cmF0aW9uX3Byb2ZpbGVfc2lkIjoiVlM1NGFiNmYxZTVlNmE5YzBkYTQ1OGNmYWFlNWVjYTAxYyJ9fX0.RCPqlu1xC5ykeRFGwccq67LaduVzS67Y02ayrO7c_C8',
+				'jwt' => $token,
 				'message' => 'Connected'
 			];
 		});
