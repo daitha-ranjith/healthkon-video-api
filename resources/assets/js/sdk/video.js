@@ -7,11 +7,6 @@ documented below.
     All rights reserved.
 */
 
-
-/* Require the core Twilio library */
-require('./vendors/twilio-video');
-
-
 /* Our video conference code */
 var VideoConference = {
 	token: "",
@@ -20,13 +15,25 @@ var VideoConference = {
 	remoteVideoContainer: "",
 
 	init: function (token, room, localVideoContainer, remoteVideoContainer) {
-		this.token = token,
 		this.room = room;
 		this.localVideoContainer = document.getElementById(localVideoContainer);
 		this.remoteVideoContainer = document.getElementById(remoteVideoContainer);
 
+		var self = this;
+
 		// make the ajax call and validate the connect
-		this.connect();
+		$.ajax({
+			method: 'POST',
+			url: '/api/conference/connect',
+			data: 'api_token=' + token,
+			success: function (data) {
+				self.token = data.jwt;
+				self.connect();
+			},
+			error: function (data) {
+				alert(data.statusText + ': Check your API key.');
+			}
+		});
 	},
 
 	connect: function () {
