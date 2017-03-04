@@ -12,12 +12,9 @@ window.$ = window.jQuery = require('jquery');
 require('bootstrap-sass');
 
 /**
- * Vue is a modern JavaScript library for building interactive web interfaces
- * using reactive data binding and reusable components. Vue's API is clean
- * and simple, leaving you to focus on building your next great project.
+ * Require hideShowPassword jQuery plugin for token reveal functionality
  */
-
-window.Vue = require('vue');
+require('hideshowpassword');
 
 /**
  * We'll load the axios HTTP library which allows us to easily issue requests
