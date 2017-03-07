@@ -31,6 +31,16 @@
 
 	                <div class="panel-body">
 
+						<form class="form-inline" id="conference">
+						  <div class="form-group">
+						    <label for="room-name">Enter the room name: </label>
+						    <input type="room-name" class="form-control" id="room-name" placeholder="room name..">
+						  </div>
+						  <button id="submit-button" type="submit" class="btn btn-success">Join</button>
+						</form>
+						
+						<hr>
+
 						<div class="row text-center">
 							<div id="presenter-video-container"></div>
 						</div>
@@ -49,18 +59,27 @@
 
 <!-- Script(s) -->
 @section('scripts')
-	<!-- <script src="https://healthkon-video-api.herokuapp.com/public/sdk/video.js"></script> -->
-	<script src="{{ asset('public/sdk/video.js') }}"></script>
+	<script src="https://healthkon-video-api.herokuapp.com/public/sdk/video.js"></script>
+	<!-- <script src="{{ asset('public/sdk/video.js') }}"></script> -->
 
 	<script>
-		var video = VideoConference.init(
-			'{{ Auth::user()->api_token }}',
-			'some-room',
-			'presenter-video-container',
-			'remote-video-container'
-		);
 
-		console.log(video.start());
+		$('form#conference').submit(function (e) {
+			var room = $('#room-name').val();
 
+			if (! room) {
+				alert('Enter a room name.');
+			} else {
+				$('button#submit-button').attr('disabled', 'disabled');
+				var video = VideoConference.init(
+					'Wke2U9COs08In0bmgIjHCDgxfe6cpPq4ZDU0mdtTZm1CYSJC69z9rdAfgGKL',
+					room,
+					'presenter-video-container',
+					'remote-video-container'
+				);
+			}
+
+			e.preventDefault();
+		});
 	</script>
 @endsection
