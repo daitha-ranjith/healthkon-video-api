@@ -27,6 +27,9 @@ var VideoConference = {
 			url: '/api/conference/connect',
 			data: 'api_token=' + token,
 			success: function (data) {
+				//
+				console.log(data.jwt);
+				//
 				self.token = data.jwt;
 				self.connect();
 			},
@@ -46,7 +49,9 @@ var VideoConference = {
         {
 			alert('Video conference is not available in your browser. Kindly use Chrome / Firefox / Opera');
 		}
-
+		//
+		console.log(this.token);
+		//
 		var Video = Twilio.Video;
 		var client = new Video.Client(this.token);
 
