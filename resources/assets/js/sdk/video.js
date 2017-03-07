@@ -31,10 +31,8 @@ var VideoConference = {
 			url: 'https://healthkon-video-api.herokuapp.com/api/conference/connect',
 			data: 'api_token=' + token,
 			dataType: 'json',
-			contentType: 'application/json',
 			success: function (data) {
 				//
-				console.log(this.url);
 				console.log(data.jwt);
 				//
 				self.token = data.jwt;
