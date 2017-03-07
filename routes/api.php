@@ -5,7 +5,7 @@ use Twilio\Jwt\Grants\VideoGrant;
 
 Route::group(['middleware' => 'auth:api'], function () {
 
-	Route::group(['prefix' => 'conference'], function () {
+	Route::group(['prefix' => 'conference', 'middleware' => 'cors'], function () {
 
 		Route::post('connect', function () {
 
