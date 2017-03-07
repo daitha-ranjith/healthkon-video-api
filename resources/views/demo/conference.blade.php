@@ -3,12 +3,23 @@
 @section('content')
 
 	<style>
-		#presenter-video-container > video {
+		#presenter-video-container {
+			width: 600px;
+			margin: auto;
+			margin-bottom: 0;
+		}
+		#presenter-video-container video {
 			width: 600px;
 		}
+		#remote-video-container {
+			max-width: 600px;
+			margin: auto;
+		}
 		#remote-video-container > div {
-			display: inline-flex;
-			height: 200px;
+			display: inline-block;
+		}
+		video.remote-video {
+			max-width: 200px
 		}
 	</style>
 

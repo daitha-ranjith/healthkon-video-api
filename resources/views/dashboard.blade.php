@@ -8,7 +8,7 @@
                 <div class="panel-heading">Dashboard</div>
 
                 <div class="panel-body">
-                    You are logged in!
+                    You are logged now in! <a href="{{ url('demo/conference') }}">Click</a> to view the demo.
                 </div>
             </div>
         </div>

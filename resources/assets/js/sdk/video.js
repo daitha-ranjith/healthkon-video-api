@@ -105,6 +105,7 @@ var VideoConference = {
 			wrapper.setAttribute('id', participant.identity);
 
 			var video = document.createElement('video');
+			video.setAttribute('class', 'remote-video');
 
 			wrapper.appendChild(video);
 
