@@ -49,14 +49,18 @@
 
 <!-- Script(s) -->
 @section('scripts')
-	<script src="https://healthkon-video-api.herokuapp.com/public/sdk/video.js"></script>
+	<!-- <script src="https://healthkon-video-api.herokuapp.com/public/sdk/video.js"></script> -->
+	<script src="{{ asset('public/sdk/video.js') }}"></script>
 
 	<script>
 		var video = VideoConference.init(
-			'Wke2U9COs08In0bmgIjHCDgxfe6cpPq4ZDU0mdtTZm1CYSJC69z9rdAfgGKL',
+			'{{ Auth::user()->api_token }}',
 			'some-room',
 			'presenter-video-container',
 			'remote-video-container'
 		);
+
+		console.log(video.start());
+
 	</script>
 @endsection
