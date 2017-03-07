@@ -23607,17 +23607,29 @@ var VideoConference = {
 
 		var self = this;
 
+		//
+		console.log(token);
+		//
+
 		// make the ajax call and validate the connect
 		$.ajax({
 			method: 'POST',
-			url: '/api/conference/connect',
+			url: 'https://healthkon-video-api.herokuapp.com/api/conference/connect',
 			data: 'api_token=' + token,
+			dataType: 'json',
+			contentType: 'application/json',
 			success: function (data) {
 				//
+				console.log(this.url);
 				console.log(data.jwt);
 				//
 				self.token = data.jwt;
-				self.connect();
+				try {
+				    self.connect();
+				}
+				catch(err) {
+				    console.log(err.message);
+				}
 			},
 			error: function (data) {
 				alert(data.statusText + ': Check your API key.');
