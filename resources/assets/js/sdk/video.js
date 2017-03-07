@@ -39,8 +39,8 @@ var VideoConference = {
 				try {
 				    self.connect();
 				}
-				catch(err) {
-				    console.log(err.message);
+				catch(error) {
+				    alert('Something went wrong. Error: ', error.message);
 				}
 			},
 			error: function (data) {
@@ -79,7 +79,7 @@ var VideoConference = {
 		}).then(function (room) {
 			self.conferenceJoined(room);
 		}, function (error) {
-			alert('Failed to connect to conference. Error:', error);
+			alert('Failed to connect to conference. Error: ', error);
 		});
 	},
 
