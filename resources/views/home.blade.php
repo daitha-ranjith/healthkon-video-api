@@ -82,9 +82,9 @@
                     Healthkon Video Conference
                 </div>
 
-                <div class="links">
+                <!-- <div class="links">
                     <a href="{{ url('/docs') }}">API Documentation</a>
-                </div>
+                </div> -->
             </div>
         </div>
     </body>
