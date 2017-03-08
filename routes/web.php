@@ -11,7 +11,7 @@ Route::group(['middleware' => 'auth'], function () {
 
 	Route::resource('user', 'UserController');
 
-	Route::get('account', 'AccountController@index');
+	Route::get('account', 'AccountController@index')->name('account');
 	Route::post('account/change-password', 'AccountController@changePassword')->name('account.change-password');
 	Route::put('account/reset-api-token', 'AccountController@resetApiToken')->name('account.reset-api-token');
 

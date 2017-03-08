@@ -58,7 +58,7 @@
                                     {{ Auth::user()->name }} <span class="caret"></span>
                                 </a>
                                 <ul class="dropdown-menu" role="menu">
-                                    <li><a href="account">Account</a></li>
+                                    <li><a href="{{ route('account') }}">Account</a></li>
                                     <li><a href="{{ route('account.billing') }}">Billing</a></li>
                                     <li>
                                         <a href="{{ route('logout') }}"
