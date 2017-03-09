@@ -9,11 +9,11 @@ Route::group(['middleware' => 'auth:api'], function () {
 
 		Route::post('connect', function () {
 
-			$appName = 'TwilioTest';
-			$TWILIO_ACCOUNT_SID = 'ACe4f94175c64ccfc9b1266ce7759aac1f';
-			$TWILIO_CONFIGURATION_SID = 'VS54ab6f1e5e6a9c0da458cfaae5eca01c';
-			$TWILIO_API_KEY = 'SK5ab6355f3157cc6c635e8072601f1c49';
-			$TWILIO_API_SECRET = 'Tq6B2qleTK9NI2PL0DrxGqtOTNQHJ3f9';
+			$TWILIO_APP_NAME = 'TwilioTest';
+			$TWILIO_ACCOUNT_SID = 'ACa95ac597175dac43c52c5b1171ed2e92';
+			$TWILIO_CONFIGURATION_SID = 'VS2da9afa479c0bef4d0c356519e0e32d7';
+			$TWILIO_API_KEY = 'SK6f9ab973c5132625142d1adb8a680b4c';
+			$TWILIO_API_SECRET = '3tke0W2FQ1DQQtLWwGli357z0yxwGxC0';
 
 			$token = new AccessToken(
 			    $TWILIO_ACCOUNT_SID, 
