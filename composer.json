@@ -9,7 +9,8 @@
         "barryvdh/laravel-cors": "^0.8.6",
         "laravel/framework": "5.4.*",
         "laravel/tinker": "~1.0",
-        "twilio/sdk": "^5.6"
+        "twilio/sdk": "^5.6",
+        "tymon/jwt-auth": "^0.5.10"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",
