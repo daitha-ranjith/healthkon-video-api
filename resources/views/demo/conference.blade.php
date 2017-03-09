@@ -59,8 +59,8 @@
 
 <!-- Script(s) -->
 @section('scripts')
-	<script src="https://healthkon-video-api.herokuapp.com/public/sdk/video.js"></script>
-	<!-- <script src="{{ asset('public/sdk/video.js') }}"></script> -->
+	<!-- <script src="https://healthkon-video-api.herokuapp.com/public/sdk/video.js"></script> -->
+	<script src="{{ asset('public/sdk/video-1.1.js') }}"></script>
 
 	<script>
 

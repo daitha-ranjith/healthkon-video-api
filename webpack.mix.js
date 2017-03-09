@@ -19,7 +19,7 @@ mix.scripts([
 	'resources/assets/js/sdk/video.js',
 ], 'public/public/sdk/video.js');
 
-mix.scripts([
+mix.babel([
 	'resources/assets/js/vendors/twilio-video.js',
 	'resources/assets/js/sdk/video-1.1.js',
 ], 'public/public/sdk/video-1.1.js');
