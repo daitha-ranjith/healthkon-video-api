@@ -4,6 +4,8 @@ namespace App\Providers;
 
 use DB;
 use Illuminate\Support\ServiceProvider;
+use App\Services\Video\TwilioVideoService;
+use App\Services\Video\VideoServiceContract;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -26,6 +28,6 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        //
+        $this->app->bind(VideoServiceContract::class, TwilioVideoService::class);
     }
 }

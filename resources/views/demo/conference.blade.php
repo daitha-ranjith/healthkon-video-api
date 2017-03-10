@@ -1,7 +1,6 @@
 @extends('layouts.app')
 
 @section('content')
-
 	<style>
 		#presenter-video-container {
 			width: 600px;
@@ -38,11 +37,11 @@
 						  </div>
 						  <button id="submit-button" type="submit" class="btn btn-success">Join</button>
 						</form>
-						
+
 						<hr>
 
 						<div class="row text-center">
-							<div id="presenter-video-container"></div>
+							<div id="local-video-container"></div>
 						</div>
 
 						<div class="row text-center">
@@ -60,26 +59,39 @@
 <!-- Script(s) -->
 @section('scripts')
 	<!-- <script src="https://healthkon-video-api.herokuapp.com/public/sdk/video.js"></script> -->
-	<script src="{{ asset('public/sdk/video-1.1.js') }}"></script>
+	<script src="{{ asset('public/sdk/video.1.1.min.js') }}"></script>
 
 	<script>
-
-		$('form#conference').submit(function (e) {
-			var room = $('#room-name').val();
-
-			if (! room) {
-				alert('Enter a room name.');
-			} else {
-				$('button#submit-button').attr('disabled', 'disabled');
-				var video = VideoConference.init(
-					'Wke2U9COs08In0bmgIjHCDgxfe6cpPq4ZDU0mdtTZm1CYSJC69z9rdAfgGKL',
-					room,
-					'presenter-video-container',
-					'remote-video-container'
-				);
-			}
-
-			e.preventDefault();
+		var video = new Video({
+			identity: 'santosh',
+			token: '{{ $token }}',
+			room: 'some-room',
+			localVideoContainer: 'local-video-container',
+			remoteVideoContainer: 'remote-video-container',
+			presenterIdentity: 'admin@healthkon.com',
+			presenterVideoContainer: 'presenter-video-container'
 		});
+
+		video.setTimeout(10);
+
+		video.connect();
+
+		// $('form#conference').submit(function (e) {
+		// 	var room = $('#room-name').val();
+
+		// 	if (! room) {
+		// 		alert('Enter a room name.');
+		// 	} else {
+		// 		$('button#submit-button').attr('disabled', 'disabled');
+		// 		var video = VideoConference.init(
+		// 			'Wke2U9COs08In0bmgIjHCDgxfe6cpPq4ZDU0mdtTZm1CYSJC69z9rdAfgGKL',
+		// 			room,
+		// 			'presenter-video-container',
+		// 			'remote-video-container'
+		// 		);
+		// 	}
+
+		// 	e.preventDefault();
+		// });
 	</script>
 @endsection
