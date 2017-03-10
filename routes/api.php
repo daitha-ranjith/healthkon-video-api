@@ -5,6 +5,9 @@ use Twilio\Jwt\Grants\VideoGrant;
 
 Route::group(['middleware' => 'auth:api'], function () {
 
+	# Route for authenticating and generating the user jwt token
+	Route::get('authorize', 'JwtController@authenticate');
+
 	Route::group(['prefix' => 'conference', 'middleware' => 'cors'], function () {
 
 		Route::post('connect', function () {
@@ -41,4 +44,12 @@ Route::group(['middleware' => 'auth:api'], function () {
 
 	});
 
+});
+
+Route::group(['middleware' => ['jwt.auth', 'jwt.refresh']], function () {
+	Route::group(['prefix' => 'conference'], function () {
+		Route::get('test', function () {
+			return request()->user();
+		});
+	});
 });
