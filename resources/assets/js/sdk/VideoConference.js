@@ -91,19 +91,19 @@ class VideoConference {
 
 	joinedRoom(room) {
 		const localParticipant = room.localParticipant;
-		// this.logConnection(room, localParticipant);
+		this.logConnection(room, localParticipant);
 
 		// already connected remote participant(s)
 		room.participants.forEach((participant) => {
 			participant.on('trackAdded', (track) => {
-				this.addVideo(participant, track);
+				this.addVideo(participant, track, room);
 			});
 		});
 
 		// new remote participant(s)
 		room.on('participantConnected', (participant) => {
 			participant.on('trackAdded', (track) => {
-				this.addVideo(participant, track);
+				this.addVideo(participant, track, room);
 			});
 		});
 
@@ -118,7 +118,7 @@ class VideoConference {
 		this.timeout = seconds;
 	}
 
-	addVideo(participant, track) {
+	addVideo(participant, track, room) {
 		const timeout = this.timeout;
 
 		if (track.kind == 'video') {
@@ -147,7 +147,7 @@ class VideoConference {
 			container.appendChild(wrapper);
 
 			var controls = '';
-			console.log(participant.identity, this.presenterIdentity)
+
 			if (participant.identity == this.presenterIdentity) {
 				controls = this.presenterPlayerControls();
 			} else {
@@ -159,11 +159,13 @@ class VideoConference {
 				duration: this.timeout
 			});
 
+			var self = this;
+
 			video.addEventListener('timeupdate', function () {
 				if (!this._startTime) this._startTime = this.currentTime;
 				const playedTime = this.currentTime - this._startTime;
 
-				var timeEl = document.querySelector('#player__time');
+				const timeEl = document.querySelector('#player__time');
 
 				if (timeEl) {
 					// add event to the player current time
@@ -180,11 +182,11 @@ class VideoConference {
 					timeEl.innerHTML = time;
 				}
 
-				// add timeout event 
-				// if (playedTime >= timeout) {
-				// 	this.pause();
-				// 	console.log('video stopped');
-				// }
+				// add timeout event
+				if (playedTime >= timeout) {
+					room.disconnect();
+					self.removeVideo(participant);
+				}
 			});
 		}
 	}
@@ -280,7 +282,7 @@ class VideoConference {
 	}
 
 	removeVideo(participant) {
-		// this.logDisconnection(participant);
+		this.logDisconnection(participant);
 		var id = '#' + participant.sid;
 		$(id).remove();
 	}

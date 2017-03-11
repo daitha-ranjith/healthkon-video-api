@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Log;
 use Exception;
 use Carbon\Carbon;
 use App\Conference;
@@ -32,13 +33,15 @@ class ConferenceController extends Controller
             $participant_data = request()->only('participant', 'participant_sid');
 
             $conference = Conference::firstOrCreate($conference_data);
-            $participant = Participant::firstOrNew($participant_data);
 
-            $conference->participants()->save($participant);
+            $participant_data['conference_id'] = $conference->id;
+
+            $participant = Participant::firstOrCreate($participant_data);
 
             return 'OK';
         } catch (Exception $e) {
-            return response("Unauthorized access. Error: {$e->getMessage()}", 401);
+            Log::error("Connection Error: {$e->getMessage()}");
+            return response("Unauthorized access.", 401);
         }
     }
 
@@ -51,7 +54,8 @@ class ConferenceController extends Controller
 
             if ( ! $participant) return response('Unauthorized access.', 401);
         } catch (Exception $e) {
-            return response("Unauthorized access. Error: {$e->getMessage()}", 401);
+            Log::error("Disconnection Error: {$e->getMessage()}");
+            return response("Unauthorized access.", 401);
         }
 
         $participant->touch();
