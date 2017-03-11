@@ -160,7 +160,7 @@ class VideoConference {
 				console.info('OK. Connected');
 			},
 			error: (error) => {
-				console.error(error);
+				// console.error(error.statusText);
 			}
 		});
 	}
@@ -173,10 +173,10 @@ class VideoConference {
 				participant_sid: participant.sid
 			},
 			success: (data) => {
-				console.info('OK. Connected');
+				console.info('OK. Disconnected');
 			},
 			error: (error) => {
-				console.error(error);
+				// console.error(error.statusText);
 			}
 		});
 	}
