@@ -58,5 +58,7 @@ class ConferenceController extends Controller
 
         $participant->duration = $participant->updated_at->diffInSeconds($participant->created_at);
         $participant->save();
+
+        return 'OK';
     }
 }

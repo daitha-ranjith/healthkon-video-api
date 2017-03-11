@@ -156,7 +156,12 @@ class VideoConference {
 				participant: participant.identity,
 				participant_sid: participant.sid
 			},
-			dataType: 'json'
+			success: (data) => {
+				console.info('OK. Connected');
+			},
+			error: (error) => {
+				console.error(error);
+			}
 		});
 	}
 
@@ -167,7 +172,12 @@ class VideoConference {
 			data: {
 				participant_sid: participant.sid
 			},
-			dataType: 'json'
+			success: (data) => {
+				console.info('OK. Connected');
+			},
+			error: (error) => {
+				console.error(error);
+			}
 		});
 	}
 
