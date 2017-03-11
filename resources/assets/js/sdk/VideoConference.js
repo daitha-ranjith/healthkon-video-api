@@ -25,7 +25,7 @@ class VideoConference {
 	authorize(token) {
 		return $.ajax({
 			method: 'POST',
-			url: '/api/conference/connect',
+			url: '/api/conference/authenticate',
 			data: {
 				identity: this.identity
 			},
@@ -35,6 +35,7 @@ class VideoConference {
 			},
 			success: (data) => {
 				this.jwt = data.jwt;
+				this.user_id = data.user_id;
 			},
 			beforeSend: (xhr, settings) => {
 				xhr.setRequestHeader('Authorization', 'Bearer: ' + token);
@@ -68,8 +69,8 @@ class VideoConference {
 		const localContainer = localParticipant.media.attach();
 
 		this.localVideoContainer.appendChild(localContainer);
-		console.log(localParticipant);
-		// ajax call to server goes here for logs..
+
+		this.logConnection(room, localParticipant);
 
 		// already connected remote participant(s)
 		room.participants.forEach((participant) => {
@@ -139,8 +140,35 @@ class VideoConference {
 	}
 
 	removeVideo(participant) {
+		this.logDisconnection(participant);
 		var id = '#' + participant.identity;
 		$(id).remove();
+	}
+
+	logConnection(room, participant) {
+		return $.ajax({
+			method: 'POST',
+			url: '/api/conference/connect',
+			data: {
+				user_id: this.user_id,
+				room_sid: room.sid,
+				room_name: room.name,
+				participant: participant.identity,
+				participant_sid: participant.sid
+			},
+			dataType: 'json'
+		});
+	}
+
+	logDisconnection(participant) {
+		return $.ajax({
+			method: 'POST',
+			url: '/api/conference/disconnect',
+			data: {
+				participant_sid: participant.sid
+			},
+			dataType: 'json'
+		});
 	}
 
 	checkBrowserSupport() {

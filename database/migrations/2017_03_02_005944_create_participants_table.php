@@ -17,13 +17,12 @@ class CreateParticipantsTable extends Migration
             $table->increments('id');
             $table->integer('conference_id')->unsigned();
             $table->string('participant');
-            $table->string('participant_id');
+            $table->string('participant_sid')->index();
             $table->integer('duration')->default(0);
-            $table->timestamp('connected_at');
-            $table->timestamp('disconnected_at')->nullable();
+            $table->timestamps();
 
             $table->foreign('conference_id')->references('id')->on('conferences')->onDelete('cascade');
-            $table->unique(['conference_id', 'participant_id']);
+            $table->unique(['conference_id', 'participant']);
         });
     }
 

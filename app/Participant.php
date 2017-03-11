@@ -2,11 +2,18 @@
 
 namespace App;
 
+use App\Conference;
 use Illuminate\Database\Eloquent\Model;
 
 class Participant extends Model
 {
-    const CREATED_AT = 'connected_at';
+    protected $fillable = [	
+    	'participant',
+    	'participant_sid'
+    ];
 
-    const UPDATED_AT = 'disconnected_at';
+    public function conference()
+    {
+    	return $this->belongsTo(Conference::class);
+    }
 }

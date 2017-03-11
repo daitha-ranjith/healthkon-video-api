@@ -70,20 +70,20 @@
 			} else {
 				var video = new Video({
 					identity: '{{ Auth::user()->email }}',
-					room: 'some-room',
+					room: room,
 					localVideoContainer: 'local-video-container',
 					remoteVideoContainer: 'remote-video-container',
 					presenterIdentity: 'admin@healthkon.com',
 					presenterVideoContainer: 'presenter-video-container'
 				});
 
-			video.setConferenceTimeout(10);
+				video.setConferenceTimeout(10);
 
-			var connected = video.authorize('{{ $token }}');
+				var connected = video.authorize('{{ $token }}');
 
-			connected.then(function () {
-				video.connect();
-			});
+				connected.then(function () {
+					video.connect();
+				});
 			}
 
 			e.preventDefault();

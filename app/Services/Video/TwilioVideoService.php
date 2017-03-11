@@ -9,8 +9,6 @@ class TwilioVideoService implements VideoServiceContract
 {
 	public function getToken($identity)
 	{
-		\Log::info($identity);
-		
 		$TWILIO_APP_NAME = 'TwilioTest';
 		$TWILIO_ACCOUNT_SID = 'ACa95ac597175dac43c52c5b1171ed2e92';
 		$TWILIO_CONFIGURATION_SID = 'VS2da9afa479c0bef4d0c356519e0e32d7';
