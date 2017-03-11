@@ -9,6 +9,7 @@ documented below.
 
 
 const Video = require('./../vendors/twilio-video');
+const plyr  = require('plyr');
 
 class VideoConference {
 	constructor(config) {
@@ -47,11 +48,11 @@ class VideoConference {
 		this.checkBrowserSupport();
 
 		const client = new Video.Client(this.jwt);
-
 		const localMedia = new Video.LocalMedia();
 
-		Video.getUserMedia().then(function (mediaStream) {
+		Video.getUserMedia().then((mediaStream) => {
 			localMedia.addStream(mediaStream);
+			const video = this.attachLocalVideo(localMedia);
 		});
 
 		client.connect({
@@ -64,13 +65,33 @@ class VideoConference {
 		});
 	}
 
+	attachLocalVideo(localMedia) {
+		const container = this.localVideoContainer;
+
+		localMedia.tracks.forEach((track) => {
+			const wrapper = document.createElement('div');
+			const video = document.createElement('video');
+
+			if (track.kind == 'video') {
+				wrapper.appendChild(video);
+				video.setAttribute('controls', true);
+				video.setAttribute('autoplay', true);
+				video.setAttribute('id', track.id);
+				video.srcObject = track.mediaStream;
+				container.appendChild(wrapper);
+
+				const controls = this.localPlayerControls();
+
+				plyr.setup(video, {
+					html: controls
+				});
+			}
+		});
+	}
+
 	joinedRoom(room) {
 		const localParticipant = room.localParticipant;
-		const localContainer = localParticipant.media.attach();
-
-		this.localVideoContainer.appendChild(localContainer);
-
-		this.logConnection(room, localParticipant);
+		// this.logConnection(room, localParticipant);
 
 		// already connected remote participant(s)
 		room.participants.forEach((participant) => {
@@ -102,7 +123,7 @@ class VideoConference {
 
 		if (track.kind == 'video') {
 			var container = '';
-			// check for presenter participation
+
 			if (participant.identity == this.presenterIdentity) {
 				container = this.presenterVideoContainer;
 			} else {
@@ -121,27 +142,146 @@ class VideoConference {
 			video.setAttribute('autoplay', true);
 			video.setAttribute('id', track.id);
 
-			// add the timeout event listener
-			video.addEventListener('timeupdate', function () {
-				if (timeout) {
-					if (!this._startTime) this._startTime = this.currentTime;
-					const playedTime = this.currentTime - this._startTime;
-					if (playedTime >= timeout) {
-						this.pause();
-						console.log('video stopped');
-					}
-				}
-			});
-
 			video.srcObject = track.mediaStream;
 
 			container.appendChild(wrapper);
+
+			var controls = '';
+			console.log(participant.identity, this.presenterIdentity)
+			if (participant.identity == this.presenterIdentity) {
+				controls = this.presenterPlayerControls();
+			} else {
+				controls = this.remotePlayerControls();
+			}
+
+			plyr.setup(video, {
+				html: controls,
+				duration: this.timeout
+			});
+
+			video.addEventListener('timeupdate', function () {
+				if (!this._startTime) this._startTime = this.currentTime;
+				const playedTime = this.currentTime - this._startTime;
+
+				var timeEl = document.querySelector('#player__time');
+
+				if (timeEl) {
+					// add event to the player current time
+					var seconds = Math.floor(playedTime);
+					seconds = ('0' + seconds).slice(-2);
+					var minutes = Math.floor(playedTime / 60);
+					minutes = ('0' + minutes).slice(-2);
+					var hours = Math.floor(playedTime / 3600);
+				    hours = ('0' + hours).slice(-2);
+				    var time = minutes + ":" + seconds;
+				    if (hours > 0) {
+				    	time = hours + ":" + time;
+				    }
+					timeEl.innerHTML = time;
+				}
+
+				// add timeout event 
+				// if (playedTime >= timeout) {
+				// 	this.pause();
+				// 	console.log('video stopped');
+				// }
+			});
 		}
 	}
 
+	localPlayerControls() {
+		return `<div class='plyr__controls'>
+			    <button type='button' data-plyr='play'>
+			        <svg><use xlink:href='#plyr-play'></use></svg>
+			        <span class='plyr__sr-only'>Play</span>
+			    </button>
+			    <button type='button' data-plyr='pause'>
+			        <svg><use xlink:href='#plyr-pause'></use></svg>
+			        <span class='plyr__sr-only'>Pause</span>
+			    </button>
+			    <button type='button' data-plyr='fullscreen'>
+			        <svg class='icon--exit-fullscreen'><use xlink:href='#plyr-exit-fullscreen'></use></svg>
+			        <svg><use xlink:href='#plyr-enter-fullscreen'></use></svg>
+			        <span class='plyr__sr-only'>Toggle Fullscreen</span>
+			    </button>
+			</div>`;
+	}
+
+	remotePlayerControls() {
+		return `<div class='plyr__controls'>
+			    <button type='button' data-plyr='play'>
+			        <svg><use xlink:href='#plyr-play'></use></svg>
+			        <span class='plyr__sr-only'>Play</span>
+			    </button>
+			    <button type='button' data-plyr='pause'>
+			        <svg><use xlink:href='#plyr-pause'></use></svg>
+			        <span class='plyr__sr-only'>Pause</span>
+			    </button>
+			    <span class='plyr__time'>
+			        <span class='plyr__sr-only'>Current time</span>
+			        <span class='plyr__time' id='player__time'>00:00</span>
+			    </span>
+			    <span class='plyr__time'>
+			        <span class='plyr__sr-only'>Duration</span>
+			        <span class='plyr__time--duration'>00:00</span>
+			    </span>
+			    <button type='button' data-plyr='mute'>
+			        <svg class='icon--muted'><use xlink:href='#plyr-muted'></use></svg>
+			        <svg><use xlink:href='#plyr-volume'></use></svg>
+			        <span class='plyr__sr-only'>Toggle Mute</span>
+			    </button>
+			    <span class='plyr__volume'>
+			        <label for='volume{id}' class='plyr__sr-only'>Volume</label>
+			        <input id='volume{id}' class='plyr__volume--input' type='range' min='0' max='10' value='5' data-plyr='volume'>
+			        <progress class='plyr__volume--display' max='10' value='0' role='presentation'></progress>
+			    </span>
+			    <button type='button' data-plyr='fullscreen'>
+			        <svg class='icon--exit-fullscreen'><use xlink:href='#plyr-exit-fullscreen'></use></svg>
+			        <svg><use xlink:href='#plyr-enter-fullscreen'></use></svg>
+			        <span class='plyr__sr-only'>Toggle Fullscreen</span>
+			    </button>
+			</div>`;
+	}
+
+	presenterPlayerControls() {
+		return `<div class='plyr__controls'>
+			    <button type='button' data-plyr='play'>
+			        <svg><use xlink:href='#plyr-play'></use></svg>
+			        <span class='plyr__sr-only'>Play</span>
+			    </button>
+			    <button type='button' data-plyr='pause'>
+			        <svg><use xlink:href='#plyr-pause'></use></svg>
+			        <span class='plyr__sr-only'>Pause</span>
+			    </button>
+			    <span class='plyr__time'>
+			        <span class='plyr__sr-only'>Current time</span>
+			        <span class='plyr__time' id='player__time'>00:00</span>
+			    </span>
+			    <span class='plyr__time'>
+			        <span class='plyr__sr-only'>Duration</span>
+			        <span class='plyr__time--duration'>00:00</span>
+			    </span>
+			    <button type='button' data-plyr='mute'>
+			        <svg class='icon--muted'><use xlink:href='#plyr-muted'></use></svg>
+			        <svg><use xlink:href='#plyr-volume'></use></svg>
+			        <span class='plyr__sr-only'>Toggle Mute</span>
+			    </button>
+			    <span class='plyr__volume'>
+			        <label for='volume{id}' class='plyr__sr-only'>Volume</label>
+			        <input id='volume{id}' class='plyr__volume--input' type='range' min='0' max='10' value='5' data-plyr='volume'>
+			        <progress class='plyr__volume--display' max='10' value='0' role='presentation'></progress>
+			    </span>
+			    <button type='button' data-plyr='fullscreen'>
+			        <svg class='icon--exit-fullscreen'><use xlink:href='#plyr-exit-fullscreen'></use></svg>
+			        <svg><use xlink:href='#plyr-enter-fullscreen'></use></svg>
+			        <span class='plyr__sr-only'>Toggle Fullscreen</span>
+			    </button>
+			</div>`;
+	}
+
 	removeVideo(participant) {
-		this.logDisconnection(participant);
-		var id = '#' + participant.identity;
+		// this.logDisconnection(participant);
+		var id = '#' + participant.sid;
 		$(id).remove();
 	}
 

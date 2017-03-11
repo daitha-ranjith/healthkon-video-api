@@ -20,6 +20,13 @@
 		video.remote-video {
 			max-width: 200px
 		}
+		#local-video-container {
+			max-width: 50px;
+			margin: auto;
+		}
+		#local-video-container > div {
+			display: inline-block;
+		}
 	</style>
 
 	<div class="container">
@@ -39,6 +46,10 @@
 						</form>
 
 						<hr>
+
+						<div class="row text-center">
+							<div id="presenter-video-container"></div>
+						</div>
 
 						<div class="row text-center">
 							<div id="local-video-container"></div>
@@ -68,25 +79,23 @@
 			if (! room) {
 				alert('Enter a room name.');
 			} else {
+				e.preventDefault();
 				var video = new Video({
 					identity: '{{ Auth::user()->email }}',
 					room: room,
 					localVideoContainer: 'local-video-container',
 					remoteVideoContainer: 'remote-video-container',
-					presenterIdentity: 'admin@healthkon.com',
+					presenterIdentity: 'santosh@example.com',
 					presenterVideoContainer: 'presenter-video-container'
 				});
 
 				video.setConferenceTimeout(10);
 
-				var connected = video.authorize('{{ $token }}');
-
-				connected.then(function () {
-					video.connect();
-				});
+				video.authorize('{{ $token }}')
+						.then(function () {
+					  		video.connect();
+						});
 			}
-
-			e.preventDefault();
 		});
 	</script>
 @endsection
