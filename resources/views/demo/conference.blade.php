@@ -62,41 +62,31 @@
 	<script src="{{ asset('public/sdk/video.1.1.min.js') }}"></script>
 
 	<script>
-		var video = new Video({
-			identity: 'santoshb',
-			room: 'some-room',
-			localVideoContainer: 'local-video-container',
-			remoteVideoContainer: 'remote-video-container',
-			presenterIdentity: 'admin@healthkon.com',
-			presenterVideoContainer: 'presenter-video-container'
+		$('form#conference').submit(function (e) {
+			var room = $('#room-name').val();
+
+			if (! room) {
+				alert('Enter a room name.');
+			} else {
+				var video = new Video({
+					identity: '{{ Auth::user()->email }}',
+					room: 'some-room',
+					localVideoContainer: 'local-video-container',
+					remoteVideoContainer: 'remote-video-container',
+					presenterIdentity: 'admin@healthkon.com',
+					presenterVideoContainer: 'presenter-video-container'
+				});
+
+			video.setConferenceTimeout(10);
+
+			var connected = video.authorize('{{ $token }}');
+
+			connected.then(function () {
+				video.connect();
+			});
+			}
+
+			e.preventDefault();
 		});
-
-		video.setConferenceTimeout(10);
-
-		var connected = video.authorize('{{ $token }}');
-
-		connected.then(function () {
-			video.connect();
-		});
-
-		// video.connect();
-
-		// $('form#conference').submit(function (e) {
-		// 	var room = $('#room-name').val();
-
-		// 	if (! room) {
-		// 		alert('Enter a room name.');
-		// 	} else {
-		// 		$('button#submit-button').attr('disabled', 'disabled');
-		// 		var video = VideoConference.init(
-		// 			'Wke2U9COs08In0bmgIjHCDgxfe6cpPq4ZDU0mdtTZm1CYSJC69z9rdAfgGKL',
-		// 			room,
-		// 			'presenter-video-container',
-		// 			'remote-video-container'
-		// 		);
-		// 	}
-
-		// 	e.preventDefault();
-		// });
 	</script>
 @endsection

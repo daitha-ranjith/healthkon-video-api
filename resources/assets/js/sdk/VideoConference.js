@@ -109,7 +109,7 @@ class VideoConference {
 			}
 
 			const wrapper = document.createElement('div')
-			wrapper.setAttribute('id', participant.identity);
+			wrapper.setAttribute('id', participant.sid);
 
 			const video = document.createElement('video');
 			video.setAttribute('class', 'remote-video');
