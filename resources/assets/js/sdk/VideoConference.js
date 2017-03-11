@@ -20,8 +20,6 @@ class VideoConference {
 		this.presenterVideoContainer = document.getElementById(config.presenterVideoContainer);
 
 		this.checkBrowserSupport();
-
-		this.authorize(config.token);
 	}
 
 	authorize(token) {
@@ -47,9 +45,7 @@ class VideoConference {
 	connect() {
 		this.checkBrowserSupport();
 
-		const client = new Video.Client(
-			"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiIsImN0eSI6InR3aWxpby1mcGE7dj0xIn0.eyJqdGkiOiJTSzZmOWFiOTczYzUxMzI2MjUxNDJkMWFkYjhhNjgwYjRjLTE0ODkxODY3MDgiLCJpc3MiOiJTSzZmOWFiOTczYzUxMzI2MjUxNDJkMWFkYjhhNjgwYjRjIiwic3ViIjoiQUNhOTVhYzU5NzE3NWRhYzQzYzUyYzViMTE3MWVkMmU5MiIsImV4cCI6MTQ4OTE5MDMwOCwiZ3JhbnRzIjp7ImlkZW50aXR5Ijoic2FudG9zaCIsInZpZGVvIjp7ImNvbmZpZ3VyYXRpb25fcHJvZmlsZV9zaWQiOiJWUzJkYTlhZmE0NzljMGJlZjRkMGMzNTY1MTllMGUzMmQ3In19fQ.ErIhXjpmhZj2h8SoZjE8HnmEmxPQPYFDEBbPVYLCC1w"
-		);
+		const client = new Video.Client(this.jwt);
 
 		const localMedia = new Video.LocalMedia();
 
@@ -96,7 +92,7 @@ class VideoConference {
 		});
 	}
 
-	setTimeout(seconds) {
+	setConferenceTimeout(seconds) {
 		this.timeout = seconds;
 	}
 
@@ -105,6 +101,7 @@ class VideoConference {
 
 		if (track.kind == 'video') {
 			var container = '';
+			// check for presenter participation
 			if (participant.identity == this.presenterIdentity) {
 				container = this.presenterVideoContainer;
 			} else {

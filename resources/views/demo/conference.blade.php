@@ -63,8 +63,7 @@
 
 	<script>
 		var video = new Video({
-			identity: 'santosh',
-			token: '{{ $token }}',
+			identity: 'santoshb',
 			room: 'some-room',
 			localVideoContainer: 'local-video-container',
 			remoteVideoContainer: 'remote-video-container',
@@ -72,9 +71,15 @@
 			presenterVideoContainer: 'presenter-video-container'
 		});
 
-		video.setTimeout(10);
+		video.setConferenceTimeout(10);
 
-		video.connect();
+		var connected = video.authorize('{{ $token }}');
+
+		connected.then(function () {
+			video.connect();
+		});
+
+		// video.connect();
 
 		// $('form#conference').submit(function (e) {
 		// 	var room = $('#room-name').val();
