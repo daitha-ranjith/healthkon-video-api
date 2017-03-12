@@ -89,6 +89,7 @@
 					presenterVideoContainer: 'presenter-video-container'
 				});
 
+				video.presenterInitiation(true);
 				video.setConferenceTimeout(10);
 
 				video.authorize('{{ $token }}')

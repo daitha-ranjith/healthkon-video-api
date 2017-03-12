@@ -44,6 +44,10 @@ class VideoConference {
 		});
 	}
 
+	presenterInitiation(status) {
+		this.presenterInitiation = status;
+	}
+
 	connect() {
 		this.checkBrowserSupport();
 
@@ -91,6 +95,24 @@ class VideoConference {
 
 	joinedRoom(room) {
 		const localParticipant = room.localParticipant;
+
+		// check for presenter initiation
+		if (this.presenterInitiation) {
+			if (this.identity != this.presenterIdentity) {
+				var presenterFound = false;
+				room.participants.forEach((participant) => {
+					if (participant.identity == this.presenterIdentity) presenterFound = true;
+				});
+
+				if (! presenterFound) {
+					room.disconnect();
+					alert('Waiting for presenter!');
+					location.reload(true);
+					return;
+				}
+			}
+		}
+
 		this.logConnection(room, localParticipant);
 
 		// already connected remote participant(s)
