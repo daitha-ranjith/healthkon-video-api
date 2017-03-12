@@ -58,10 +58,11 @@ class ConferenceController extends Controller
             return response("Unauthorized access.", 401);
         }
 
-        $participant->touch();
-
-        $participant->duration = $participant->updated_at->diffInSeconds($participant->created_at);
-        $participant->save();
+        if ($participant->created_at == $participant->updated_at) {
+            $participant->touch();
+            $participant->duration = $participant->updated_at->diffInSeconds($participant->created_at);
+            $participant->save();
+        }
 
         return 'OK';
     }
