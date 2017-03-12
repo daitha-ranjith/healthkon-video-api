@@ -19,7 +19,7 @@ Route::group(['middleware' => 'auth'], function () {
 
 	Route::get('demo/conference', function () {
 		$token = request()->user()->api_token;
-		$url = url("http://healthkon-video-api.dev/api/authorize?api_token={$token}");
+		$url = url( config('app.url') . "/api/authorize?api_token=" . $token );
 		$data = json_decode(file_get_contents($url));
 
 		return view('demo.conference')->withToken($data->token);
