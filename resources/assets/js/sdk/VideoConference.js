@@ -13,6 +13,7 @@ const plyr  = require('plyr');
 
 class VideoConference {
 	constructor(config) {
+		this.baseUrl = 'https://healthkon-video-api.herokuapp.com',
 		this.identity = config.identity,
 		this.room = config.room;
 		this.localVideoContainer = document.getElementById(config.localVideoContainer);
@@ -26,7 +27,7 @@ class VideoConference {
 	authorize(token) {
 		return $.ajax({
 			method: 'POST',
-			url: '/api/conference/authenticate',
+			url: this.baseUrl + '/api/conference/authenticate',
 			data: {
 				identity: this.identity
 			},
@@ -312,7 +313,7 @@ class VideoConference {
 	logConnection(room, participant) {
 		return $.ajax({
 			method: 'POST',
-			url: '/api/conference/connect',
+			url: this.baseUrl + '/api/conference/connect',
 			data: {
 				user_id: this.user_id,
 				room_sid: room.sid,
@@ -332,7 +333,7 @@ class VideoConference {
 	logDisconnection(participant) {
 		return $.ajax({
 			method: 'POST',
-			url: '/api/conference/disconnect',
+			url: this.baseUrl + '/api/conference/disconnect',
 			data: {
 				participant_sid: participant.sid
 			},
