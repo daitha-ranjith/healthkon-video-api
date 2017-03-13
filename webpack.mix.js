@@ -14,14 +14,9 @@ const { mix } = require('laravel-mix');
 mix.js('resources/assets/js/app.js', 'public/js')
    .sass('resources/assets/sass/app.scss', 'public/css');
 
+// SDK specific
 mix.js([
-	'resources/assets/js/sdk/VideoConference.js',
-	'resources/assets/js/video.js'
-],'public/public/sdk/video.1.1.min.js');
-
-/*
-mix.scripts([
-	'resources/assets/js/vendors/twilio-video.js',
-	'resources/assets/js/sdk/video.js',
-], 'public/public/sdk/video.js');
-*/
+		'resources/assets/js/sdk/VideoConference.js',
+		'resources/assets/js/video.js'
+	], 'public/public/sdk/video.1.1.min.js')
+	.sass('resources/assets/sass/sdk/video.scss', 'public/public');
