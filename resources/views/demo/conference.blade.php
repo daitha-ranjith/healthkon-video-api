@@ -97,16 +97,24 @@
 				video.presenterInitiation(true);
 				video.setConferenceTimeout(10);
 
-				video
-					.authorize('{{ $token }}')
-					.then(function () {
-				  		video.connect();
+				video.authorize('{{ $token }}').then(connected);
 
-				  		video.withChat({
-				  			messagesContainer: 'messages-container',
-				  			messageInput: 'message-input'
-				  		});
+				function connected() {
+			  		video.connect().then(function (room) {
+						var joined = video.joinRoom(room);
+						if (joined.status) {
+							video.withChat({
+					  			messagesContainer: 'messages-container',
+					  			messageInput: 'message-input'
+					  		});
+						} else {
+							setTimeout(function () {
+								console.log('waiting for presenter');
+								connected();
+							}, 2000)
+						}
 					});
+				}
 
 			}
 		});

@@ -40,6 +40,14 @@ class VideoConference {
 				this.videoJwt = data.video_jwt;
 				this.chatJwt = data.chat_jwt;
 				this.userId = data.user_id;
+
+				this.client = new Video.Client(this.videoJwt);
+				this.localMedia = new Video.LocalMedia();
+
+				Video.getUserMedia().then((mediaStream) => {
+					this.localMedia.addStream(mediaStream);
+					this.attachLocalVideo(this.localMedia);
+				});
 			},
 			beforeSend: (xhr, settings) => {
 				xhr.setRequestHeader('Authorization', 'Bearer: ' + token);
@@ -54,26 +62,14 @@ class VideoConference {
 	connect() {
 		this.checkBrowserSupport();
 
-		const client = new Video.Client(this.videoJwt);
-		const localMedia = new Video.LocalMedia();
-
-		Video.getUserMedia().then((mediaStream) => {
-			localMedia.addStream(mediaStream);
-			const video = this.attachLocalVideo(localMedia);
-		});
-
-		client.connect({
+		return this.client.connect({
 			to: this.room,
-			localMedia: localMedia
-		}).then((room) => {
-			this.joinedRoom(room);
-		}, (error) => {
-			alert('Failed to connect to conference. Error: ', error);
+			localMedia: this.localMedia
 		});
 	}
 
 	attachLocalVideo(localMedia) {
-		const container = this.localVideoContainer;
+		const container = $(this.localVideoContainer);
 
 		localMedia.tracks.forEach((track) => {
 			const wrapper = document.createElement('div');
@@ -83,20 +79,22 @@ class VideoConference {
 				wrapper.appendChild(video);
 				video.setAttribute('controls', true);
 				video.setAttribute('autoplay', true);
+				video.setAttribute('muted', true);
 				video.setAttribute('id', track.id);
 				video.srcObject = track.mediaStream;
-				container.appendChild(wrapper);
+				container.html(wrapper);
 
 				const controls = this.localPlayerControls();
 
 				plyr.setup(video, {
-					html: controls
+					html: controls,
+					audio: false
 				});
 			}
 		});
 	}
 
-	joinedRoom(room) {
+	joinRoom(room) {
 		const localParticipant = room.localParticipant;
 
 		// check for presenter initiation
@@ -111,9 +109,11 @@ class VideoConference {
 
 				if (! presenterFound) {
 					room.disconnect();
-					alert('Waiting for presenter!');
-					location.reload(true);
-					return;
+
+					return {
+						status: false,
+						message: 'Waiting for presenter!'
+					}
 				}
 			}
 		}
@@ -139,6 +139,11 @@ class VideoConference {
 			// ajax call to server goes here for logs.. using participant identity
 			this.removeVideo(participant);
 		});
+
+		return {
+			status: true,
+			message: 'Room connected.'
+		}
 	}
 
 	setConferenceTimeout(seconds) {
@@ -146,7 +151,7 @@ class VideoConference {
 	}
 
 	addVideo(participant, track, room) {
-		const timeout = this.timeout;
+		const timeout = (this.timeout) ? this.timeout : 0;
 
 		if (track.kind == 'video') {
 			var container = '';
@@ -183,7 +188,7 @@ class VideoConference {
 
 			plyr.setup(video, {
 				html: controls,
-				duration: this.timeout
+				duration: timeout
 			});
 
 			var self = this;
@@ -210,7 +215,7 @@ class VideoConference {
 				}
 
 				// add timeout event
-				if (playedTime >= timeout) {
+				if (timeout > 0 && playedTime >= timeout) {
 					room.disconnect();
 					self.removeVideo(participant);
 				}
@@ -393,7 +398,7 @@ class VideoConference {
 				participant_sid: participant.sid
 			},
 			success: (data) => {
-				console.info('OK. Connected');
+				// console.info('OK. Connected');
 			},
 			error: (error) => {
 				// console.error(error.statusText);
@@ -409,7 +414,7 @@ class VideoConference {
 				participant_sid: participant.sid
 			},
 			success: (data) => {
-				console.info('OK. Disconnected');
+				// console.info('OK. Disconnected');
 			},
 			error: (error) => {
 				// console.error(error.statusText);
