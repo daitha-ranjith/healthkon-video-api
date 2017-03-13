@@ -14,15 +14,15 @@ class ConferenceController extends Controller
 {
     public function authenticate(VideoServiceContract $client)
     {
-        $identity = request()->identity;
+        $identity = request()->has('identity') ? request()->identity : str_random(5);
 
-        // 	get the token
-    	$token = $client->getToken($identity);
+        $client->setIdentity($identity);
+        $client->generateToken();
 
-    	// 	respond back with the Twilio JWT token
         return response()->json([
             'user_id' => request()->user()->id,
-            'jwt' => $token
+            'video_jwt' => $client->getVideoToken(),
+            'chat_jwt' => $client->getChatToken()
         ]);
     }
 

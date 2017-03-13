@@ -59,6 +59,10 @@
 							<div id="remote-video-container"></div>
 						</div>
 
+						<div id="messages-container"></div>
+						<div>
+							<input type="text" id="message-input">
+						</div>
 	                </div>
 	            </div>
 			</div>
@@ -80,22 +84,30 @@
 				alert('Enter a room name.');
 			} else {
 				e.preventDefault();
+
 				var video = new Video({
 					identity: '{{ Auth::user()->email }}',
 					room: room,
 					localVideoContainer: 'local-video-container',
 					remoteVideoContainer: 'remote-video-container',
-					presenterIdentity: 'santosh@example.com',
+					presenterIdentity: 'presenter@healthkon.com',
 					presenterVideoContainer: 'presenter-video-container'
 				});
 
 				video.presenterInitiation(true);
 				video.setConferenceTimeout(10);
 
-				video.authorize('{{ $token }}')
-						.then(function () {
-					  		video.connect();
-						});
+				video
+					.authorize('{{ $token }}')
+					.then(function () {
+				  		video.connect();
+
+				  		video.withChat({
+				  			messagesContainer: 'messages-container',
+				  			messageInput: 'message-input'
+				  		});
+					});
+
 			}
 		});
 	</script>

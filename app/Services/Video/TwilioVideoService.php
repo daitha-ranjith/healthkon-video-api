@@ -4,30 +4,73 @@ namespace App\Services\Video;
 
 use Twilio\Jwt\AccessToken;
 use Twilio\Jwt\Grants\VideoGrant;
+use Twilio\Jwt\Grants\IpMessagingGrant;
 
 class TwilioVideoService implements VideoServiceContract
 {
-	public function getToken($identity)
-	{
-		$TWILIO_APP_NAME = 'TwilioTest';
-		$TWILIO_ACCOUNT_SID = 'ACa95ac597175dac43c52c5b1171ed2e92';
-		$TWILIO_CONFIGURATION_SID = 'VS2da9afa479c0bef4d0c356519e0e32d7';
-		$TWILIO_API_KEY = 'SK6f9ab973c5132625142d1adb8a680b4c';
-		$TWILIO_API_SECRET = '3tke0W2FQ1DQQtLWwGli357z0yxwGxC0';
+	private $app;
 
+	private $account_sid;
+
+	private $api_key;
+
+	private $api_secret;
+
+	private $identity;
+
+	private $token;
+
+	public function __construct()
+	{
+		$this->app = config('services.twilio.app');
+		$this->account_sid = config('services.twilio.sid');
+		$this->api_key = config('services.twilio.key');
+		$this->api_secret = config('services.twilio.secret');
+	}
+
+	public function setIdentity($identity)
+	{
+		$this->identity = $identity;
+	}
+
+	public function generateToken()
+	{
 		$token = new AccessToken(
-		    $TWILIO_ACCOUNT_SID,
-		    $TWILIO_API_KEY,
-		    $TWILIO_API_SECRET,
+		    $this->account_sid,
+		    $this->api_key,
+		    $this->api_secret,
 		    3600,
-		    $identity
+		    $this->identity
 		);
 
-		$grant = new VideoGrant();
-		$grant->setConfigurationProfileSid($TWILIO_CONFIGURATION_SID);
-		$token->addGrant($grant);
-		$token = $token->toJWT();
-
-		return $token;
+		$this->token = $token;
 	}
+
+	public function getVideoToken()
+	{
+		$configuration_sid = config('services.twilio.video.sid');
+
+		$grant = new VideoGrant();
+		$grant->setConfigurationProfileSid($configuration_sid);
+
+		$token = $this->token->addGrant($grant);
+
+		return $token->toJWT();
+	}
+
+	public function getChatToken()
+	{
+		$ipm_service_id = config('services.twilio.chat.sid');
+
+		$endpoint = $this->app . ":" . $this->identity . ":" . 'web';
+
+		$ipm_grant = new IpMessagingGrant;
+	    $ipm_grant->setServiceSid($ipm_service_id);
+	    $ipm_grant->setEndpointId($endpoint);
+
+	    $token = $this->token->addGrant($ipm_grant);
+
+		return $token->toJWT();
+	}
+
 }

@@ -4,5 +4,7 @@ namespace App\Services\Video;
 
 interface VideoServiceContract
 {
-	public function getToken($identity);
+	public function getVideoToken();
+
+	public function getChatToken();
 }

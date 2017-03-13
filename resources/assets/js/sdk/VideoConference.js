@@ -9,6 +9,7 @@ documented below.
 
 
 const Video = require('./../vendors/twilio-video');
+const Chat = require('./../vendors/twilio-chat');
 const plyr  = require('plyr');
 
 class VideoConference {
@@ -33,11 +34,12 @@ class VideoConference {
 			},
 			dataType: 'json',
 			error: (error) => {
-				alert(error.statusText + ': Check your API key.');
+				alert('Error: Check your API key.');
 			},
 			success: (data) => {
-				this.jwt = data.jwt;
-				this.user_id = data.user_id;
+				this.videoJwt = data.video_jwt;
+				this.chatJwt = data.chat_jwt;
+				this.userId = data.user_id;
 			},
 			beforeSend: (xhr, settings) => {
 				xhr.setRequestHeader('Authorization', 'Bearer: ' + token);
@@ -52,7 +54,7 @@ class VideoConference {
 	connect() {
 		this.checkBrowserSupport();
 
-		const client = new Video.Client(this.jwt);
+		const client = new Video.Client(this.videoJwt);
 		const localMedia = new Video.LocalMedia();
 
 		Video.getUserMedia().then((mediaStream) => {
@@ -102,7 +104,9 @@ class VideoConference {
 			if (this.identity != this.presenterIdentity) {
 				var presenterFound = false;
 				room.participants.forEach((participant) => {
-					if (participant.identity == this.presenterIdentity) presenterFound = true;
+					if (participant.identity == this.presenterIdentity) {
+						presenterFound = true;
+					}
 				});
 
 				if (! presenterFound) {
@@ -310,12 +314,79 @@ class VideoConference {
 		$(id).remove();
 	}
 
+	withChat(chatConfig) {
+		this.chatConfig = chatConfig;
+
+		let chatClient = Chat.Client;
+		chatClient = new Chat(this.chatJwt);
+
+		chatClient.initialize().then((chatClient) => {
+			this.chatConnected(chatClient);
+		});
+	}
+
+	chatConnected(chatClient) {
+		const channelFound = chatClient.getChannelByUniqueName(this.room);
+
+		this.pushChatInfo('Connecting..');
+
+		channelFound.then((channel) => {
+			this.pushChatInfo('Connected');
+            this.setupChatConversation(channel);
+		}, (error) => {
+			if (error.status == 404) {
+				chatClient.createChannel({
+					uniqueName: this.room,
+					friendlyName: 'General Channel'
+				}).then((channel) => {
+					this.pushChatInfo('Connected');
+					this.setupChatConversation(channel);
+				});
+			}
+		});
+	}
+
+	setupChatConversation(channel) {
+		channel.join().then((channel) => {
+			this.pushChatInfo('Joined as ' + this.identity);
+		});
+
+		// new message event
+		channel.on('messageAdded', (message) => {
+			this.pushChatMessage(message.author, message.body);
+		});
+
+		// attach message input event
+		const input = $('#' + this.chatConfig.messageInput);
+	    input.on('keydown', function(e) {
+	        if (e.keyCode == 13) {
+	            channel.sendMessage(input.val());
+	            input.val('');
+	        }
+	    });
+	}
+
+	pushChatMessage(member, message) {
+		const el = $('#' + this.chatConfig.messagesContainer);
+		const block = `<div class="video-chat-message-block">
+				<div class="video-chat-user"> ${member}: </div>
+				<div class="video-chat-message"> ${message} </div>
+		</div>`;
+		el.append(block);
+	}
+
+	pushChatInfo(message) {
+		const el = $('#' + this.chatConfig.messagesContainer);
+		const info = '<div class="video-chat-message-info">' + message + '</div>';
+		el.append(info);
+	}
+
 	logConnection(room, participant) {
 		return $.ajax({
 			method: 'POST',
 			url: this.baseUrl + '/api/conference/connect',
 			data: {
-				user_id: this.user_id,
+				user_id: this.userId,
 				room_sid: room.sid,
 				room_name: room.name,
 				participant: participant.identity,

@@ -35,4 +35,34 @@ return [
         'secret' => env('STRIPE_SECRET'),
     ],
 
+    'twilio' => [
+        'app' => env('TWILIO_APP_NAME'),
+        'sid' => env('TWILIO_ACCOUNT_SID'),
+        'key' => env('TWILIO_API_KEY'),
+        'secret' => env('TWILIO_API_SECRET'),
+        'video' => [
+            'sid' => env('TWILIO_VIDEO_PROFILE_CONFIGURATION_SID')
+        ],
+        'chat' => [
+            'sid' => env('TWILIO_IP_MESSAGING_SERVICE_SID')
+        ]
+    ]
+
 ];
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
