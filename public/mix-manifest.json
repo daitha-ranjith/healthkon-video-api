@@ -1,6 +1,6 @@
 {
+  "/public/sdk/video.1.1.min.js": "/public/sdk/video.1.1.min.js",
   "/js/app.js": "/js/app.js",
   "/css/app.css": "/css/app.css",
-  "/public/video.css": "/public/video.css",
-  "/public/sdk/video.1.1.min.js": "/public/sdk/video.1.1.min.js"
+  "/public/video.css": "/public/video.css"
 }

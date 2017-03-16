@@ -16,6 +16,7 @@
   },
   "dependencies": {
     "hideshowpassword": "^2.0.10",
+    "moment": "^2.17.1",
     "plyr": "^2.0.11"
   }
 }

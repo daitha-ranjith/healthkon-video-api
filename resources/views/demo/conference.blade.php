@@ -73,8 +73,8 @@
 
 <!-- Script(s) -->
 @section('scripts')
-	<script src="https://healthkon-video-api.herokuapp.com/public/sdk/video.1.1.min.js"></script>
-	<!-- <script src="{{ asset('public/sdk/video.1.1.min.js') }}"></script> -->
+	<!-- <script src="https://healthkon-video-api.herokuapp.com/public/sdk/video.1.1.min.js"></script> -->
+	<script src="{{ asset('public/sdk/video.1.1.min.js') }}"></script>
 
 	<script>
 		$('form#conference').submit(function (e) {
@@ -85,8 +85,14 @@
 			} else {
 				e.preventDefault();
 
+				var identity = '{{ str_random(5) }}';
+
+				@if ( request()->has('presenter') )
+					identity = 'presenter@healthkon.com';
+				@endif
+
 				var video = new Video({
-					identity: '{{ Auth::user()->email }}',
+					identity: identity,
 					room: room,
 					localVideoContainer: 'local-video-container',
 					remoteVideoContainer: 'remote-video-container',
@@ -95,7 +101,7 @@
 				});
 
 				video.presenterInitiation(true);
-				video.setConferenceTimeout(10);
+				video.setConferenceTimeout(3601);
 
 				video.authorize('{{ $token }}').then(connected);
 

@@ -11,6 +11,7 @@ documented below.
 const Video = require('./../vendors/twilio-video');
 const Chat = require('./../vendors/twilio-chat');
 const plyr  = require('plyr');
+const m = require('moment');
 
 class VideoConference {
 	constructor(config) {
@@ -164,9 +165,9 @@ class VideoConference {
 
 			const wrapper = document.createElement('div')
 			wrapper.setAttribute('id', participant.sid);
+			wrapper.setAttribute('class', 'remote-video-wrapper');
 
 			const video = document.createElement('video');
-			video.setAttribute('class', 'remote-video');
 
 			wrapper.appendChild(video);
 
@@ -197,21 +198,37 @@ class VideoConference {
 				if (!this._startTime) this._startTime = this.currentTime;
 				const playedTime = this.currentTime - this._startTime;
 
-				const timeEl = document.querySelector('#player__time');
+				const timeEl = document.querySelector('.player__time');
+				const duration = m.duration(playedTime * 1000, 'milliseconds');
+
+				const remainingTimeEl = document.querySelector('.player__remaining_time');
+				const remainingDuration = m.duration(timeout*1000 - playedTime*1000, 'milliseconds');
 
 				if (timeEl) {
 					// add event to the player current time
-					var seconds = Math.floor(playedTime);
-					seconds = ('0' + seconds).slice(-2);
-					var minutes = Math.floor(playedTime / 60);
-					minutes = ('0' + minutes).slice(-2);
-					var hours = Math.floor(playedTime / 3600);
-				    hours = ('0' + hours).slice(-2);
-				    var time = minutes + ":" + seconds;
+					const hours = duration.hours();
+					const minutes = (duration.minutes() > 9) ? duration.minutes() : '0' + duration.minutes();
+					const seconds = (duration.seconds() > 9) ? duration.seconds() : '0' + duration.seconds();
+
+				    let time = minutes + ":" + seconds;
 				    if (hours > 0) {
 				    	time = hours + ":" + time;
 				    }
+
 					timeEl.innerHTML = time;
+				}
+
+				if (remainingTimeEl) {
+					const remainingHours = remainingDuration.hours();
+					const remainingMinutes = (duration.minutes() > 9) ? duration.minutes() : '0' + duration.minutes();
+					const remainingSeconds = (duration.seconds() > 9) ? duration.seconds() : '0' + duration.seconds();
+
+					let remainingTime = remainingMinutes + ":" + remainingSeconds;
+				    if (remainingHours > 0) {
+				    	remainingTime = remainingHours + ":" + remainingTime;
+				    }
+
+					remainingTimeEl.innerHTML = remainingTime;
 				}
 
 				// add timeout event
@@ -233,6 +250,10 @@ class VideoConference {
 			        <svg><use xlink:href='#plyr-pause'></use></svg>
 			        <span class='plyr__sr-only'>Pause</span>
 			    </button>
+			    <span class='plyr__time'>
+			        <span class='plyr__sr-only'>Remaining time</span>
+			        <span class='plyr__time player__remaining_time'>00:00</span>
+			    </span>
 			    <button type='button' data-plyr='fullscreen'>
 			        <svg class='icon--exit-fullscreen'><use xlink:href='#plyr-exit-fullscreen'></use></svg>
 			        <svg><use xlink:href='#plyr-enter-fullscreen'></use></svg>
@@ -251,14 +272,6 @@ class VideoConference {
 			        <svg><use xlink:href='#plyr-pause'></use></svg>
 			        <span class='plyr__sr-only'>Pause</span>
 			    </button>
-			    <span class='plyr__time'>
-			        <span class='plyr__sr-only'>Current time</span>
-			        <span class='plyr__time' id='player__time'>00:00</span>
-			    </span>
-			    <span class='plyr__time'>
-			        <span class='plyr__sr-only'>Duration</span>
-			        <span class='plyr__time--duration'>00:00</span>
-			    </span>
 			    <button type='button' data-plyr='mute'>
 			        <svg class='icon--muted'><use xlink:href='#plyr-muted'></use></svg>
 			        <svg><use xlink:href='#plyr-volume'></use></svg>
@@ -289,7 +302,7 @@ class VideoConference {
 			    </button>
 			    <span class='plyr__time'>
 			        <span class='plyr__sr-only'>Current time</span>
-			        <span class='plyr__time' id='player__time'>00:00</span>
+			        <span class='plyr__time player__time'>00:00</span>
 			    </span>
 			    <span class='plyr__time'>
 			        <span class='plyr__sr-only'>Duration</span>
