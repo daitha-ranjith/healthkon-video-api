@@ -250,10 +250,11 @@ class VideoConference {
 			        <svg><use xlink:href='#plyr-pause'></use></svg>
 			        <span class='plyr__sr-only'>Pause</span>
 			    </button>
-			    <span class='plyr__time'>
-			        <span class='plyr__sr-only'>Remaining time</span>
-			        <span class='plyr__time player__remaining_time'>00:00</span>
-			    </span>
+			    <button type='button' data-plyr='mute'>
+			        <svg class='icon--muted'><use xlink:href='#plyr-muted'></use></svg>
+			        <svg><use xlink:href='#plyr-volume'></use></svg>
+			        <span class='plyr__sr-only'>Toggle Mute</span>
+			    </button>
 			    <button type='button' data-plyr='fullscreen'>
 			        <svg class='icon--exit-fullscreen'><use xlink:href='#plyr-exit-fullscreen'></use></svg>
 			        <svg><use xlink:href='#plyr-enter-fullscreen'></use></svg>
@@ -277,11 +278,6 @@ class VideoConference {
 			        <svg><use xlink:href='#plyr-volume'></use></svg>
 			        <span class='plyr__sr-only'>Toggle Mute</span>
 			    </button>
-			    <span class='plyr__volume'>
-			        <label for='volume{id}' class='plyr__sr-only'>Volume</label>
-			        <input id='volume{id}' class='plyr__volume--input' type='range' min='0' max='10' value='5' data-plyr='volume'>
-			        <progress class='plyr__volume--display' max='10' value='0' role='presentation'></progress>
-			    </span>
 			    <button type='button' data-plyr='fullscreen'>
 			        <svg class='icon--exit-fullscreen'><use xlink:href='#plyr-exit-fullscreen'></use></svg>
 			        <svg><use xlink:href='#plyr-enter-fullscreen'></use></svg>
