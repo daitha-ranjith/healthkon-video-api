@@ -148,7 +148,7 @@ class VideoConference {
 	}
 
 	setConferenceTimeout(seconds) {
-		this.timeout = seconds;
+		this.timeout = parseInt(seconds);
 	}
 
 	addVideo(participant, track, room) {
