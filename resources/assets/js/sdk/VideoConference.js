@@ -335,7 +335,7 @@ class VideoConference {
 		chatClient = new Chat(this.chatJwt);
 
 		chatClient.initialize().then((chatClient) => {
-			this.chatConnected(chatClient);
+			return this.chatConnected(chatClient);
 		});
 	}
 
@@ -349,14 +349,15 @@ class VideoConference {
             this.setupChatConversation(channel);
 		}, (error) => {
 			if (error.status == 404) {
-				chatClient.createChannel({
+				return chatClient.createChannel({
 					uniqueName: this.room,
 					friendlyName: 'General Channel'
-				}).then((channel) => {
-					this.chatChannel = channel;
-					this.pushChatInfo('Connected');
-					this.setupChatConversation(channel);
 				});
+				// .then((channel) => {
+				// 	this.chatChannel = channel;
+				// 	this.pushChatInfo('Connected');
+				// 	this.setupChatConversation(channel);
+				// });
 			}
 		});
 	}
