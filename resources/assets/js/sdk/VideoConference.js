@@ -353,6 +353,7 @@ class VideoConference {
 					uniqueName: this.room,
 					friendlyName: 'General Channel'
 				}).then((channel) => {
+					this.chatChannel = channel;
 					this.pushChatInfo('Connected');
 					this.setupChatConversation(channel);
 				});
