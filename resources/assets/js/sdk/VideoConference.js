@@ -334,11 +334,10 @@ class VideoConference {
 		let chatClient = Chat.Client;
 		chatClient = new Chat(this.chatJwt);
 
-		chatClient.initialize().then((chatClient) => {
-			return this.chatConnected(chatClient);
-		});
+		return chatClient.initialize();
 	}
 
+	/*
 	chatConnected(chatClient) {
 		const channelFound = chatClient.getChannelByUniqueName(this.room);
 
@@ -349,18 +348,18 @@ class VideoConference {
             this.setupChatConversation(channel);
 		}, (error) => {
 			if (error.status == 404) {
-				return chatClient.createChannel({
+				chatClient.createChannel({
 					uniqueName: this.room,
 					friendlyName: 'General Channel'
+				}).then((channel) => {
+					this.chatChannel = channel;
+					this.pushChatInfo('Connected');
+					this.setupChatConversation(channel);
 				});
-				// .then((channel) => {
-				// 	this.chatChannel = channel;
-				// 	this.pushChatInfo('Connected');
-				// 	this.setupChatConversation(channel);
-				// });
 			}
 		});
 	}
+	*/
 
 	setupChatConversation(channel) {
 		channel.join().then((channel) => {
