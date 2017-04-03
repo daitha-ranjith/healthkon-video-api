@@ -87,11 +87,28 @@ class VideoConference {
 
 				const controls = this.localPlayerControls();
 
-				plyr.setup(video, {
+				const player = plyr.setup(video, {
 					html: controls,
 					audio: false
 				});
+
+				player[0].on('play', function (event) {
+					localMedia.unpause();
+				});
+
+				player[0].on('pause', function (event) {
+					localMedia.pause();
+				});
+
+				player[0].on('volumechange', function (event) {
+					if ( player[0].isMuted() ) {
+						localMedia.mute();
+					} else {
+						localMedia.unmute();
+					}
+				});
 			}
+
 		});
 	}
 
