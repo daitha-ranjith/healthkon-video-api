@@ -391,7 +391,7 @@ class VideoConference {
 		// attach message input event
 		const input = $('#' + this.chatConfig.messageInput);
 	    input.on('keydown', function(e) {
-	        if (e.keyCode == 13) {
+	        if (e.keyCode == 13 && input.val() != '') {
 	            channel.sendMessage(input.val());
 	            input.val('');
 	        }
