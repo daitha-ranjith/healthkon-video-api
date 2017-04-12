@@ -80,7 +80,6 @@ class VideoConference {
 				wrapper.appendChild(video);
 				video.setAttribute('controls', true);
 				video.setAttribute('autoplay', true);
-				video.setAttribute('muted', true);
 				video.setAttribute('id', track.id);
 				video.srcObject = track.mediaStream;
 				container.html(wrapper);
@@ -88,8 +87,7 @@ class VideoConference {
 				const controls = this.localPlayerControls();
 
 				const player = plyr.setup(video, {
-					html: controls,
-					audio: false
+					html: controls
 				});
 
 				player[0].on('play', function (event) {
