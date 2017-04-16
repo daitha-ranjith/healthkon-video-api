@@ -1,41 +1,103 @@
-<p align="center"><img src="https://laravel.com/assets/img/components/logo-laravel.svg"></p>
+## API
 
-<p align="center">
-<a href="https://travis-ci.org/laravel/framework"><img src="https://travis-ci.org/laravel/framework.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://poser.pugx.org/laravel/framework/d/total.svg" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://poser.pugx.org/laravel/framework/v/stable.svg" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://poser.pugx.org/laravel/framework/license.svg" alt="License"></a>
-</p>
+Simple and intuitive API for building your own video conference applications.
 
-## About Laravel
+- Make One-to-Many video calls
+- Conferences with live chat
+- Single presenter type conferences
+- And more..
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable, creative experience to be truly fulfilling. Laravel attempts to take the pain out of development by easing common tasks used in the majority of web projects, such as:
+## Installation
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+#### Access key
 
-Laravel is accessible, yet powerful, providing tools needed for large, robust applications. A superb combination of simplicity, elegance, and innovation give you tools you need to build any application with which you are tasked.
+Get your application Access Key under your **[Account](https://sandbox.healthkon.com/rural/public/av/public/account)** settings.
 
-## Learning Laravel
+#### Include the CSS and JS libraries
 
-Laravel has the most extensive and thorough documentation and video tutorial library of any modern web application framework. The [Laravel documentation](https://laravel.com/docs) is thorough, complete, and makes it a breeze to get started learning the framework.
+**CSS:**
+```html
+<link rel="stylesheet" href="https://sandbox.healthkon.com/rural/public/av/public/public/video.css">
+```
+**JS:**
+```html
+<script src="https://sandbox.healthkon.com/rural/public/av/public/public/sdk/video.1.1.min.js"></script>
+```
 
-If you're not in the mood to read, [Laracasts](https://laracasts.com) contains over 900 video tutorials on a range of topics including Laravel, modern PHP, unit testing, JavaScript, and more. Boost the skill level of yourself and your entire team by digging into our comprehensive video library.
+## Usage
 
-## Contributing
+A conference basically consists of a Local Participant, Remote Participants and a Room for them to participate. If it is a single presenter type conference, which requires a host or a presenter to start the conference. The conference can be optionally setup with text chat.
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](http://laravel.com/docs/contributions).
+To initiate the video conference,
 
-## Security Vulnerabilities
+```javascript
+var video = new Video({
+	identity: identity,
+	room: room,
+	localVideoContainer: 'local-video-container',
+	remoteVideoContainer: 'remote-video-container',
+	presenterIdentity: 'presenter@healthkon.com',
+	presenterVideoContainer: 'presenter-video-container'
+});
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell at taylor@laravel.com. All security vulnerabilities will be promptly addressed.
+video.presenterInitiation(true);
+```
+
+Here, identity could be an unique identifier of the participant. `localVideoContainer`, `remoteVideoContainer`, and `presenterVideoContainer` refers to the div ids of their respective containers. You can set the presenter initiation to `true` for single presenter type video conference.
+
+#### Connection
+
+Pass the access key and get connected by,
+
+```javascript
+video.authorize(accessTokenFromServer).then(callback);
+```
+
+Now, in the callback function, you get all the details regarding the video conference room and chat channel details.
+Dig more by looking at the below code.
+
+```javascript
+function callback() {
+	video.connect().then(function (room) {
+		// `room` is the video conference room
+		var joined = video.joinRoom(room);
+		// if participant is joined in the room
+		if (joined.status) {
+			// if chat is required
+			var chat = video.withChat({
+	  			messagesContainer: 'messages', // div id where the chat messages appear
+	  			messageInput: 'chat-input' // div id to type in the chat
+	  		}).then(function (chatClient) {
+				var channelFound = chatClient.getChannelByUniqueName(video.room);
+				video.pushChatInfo('Connecting..'); // you can broadcast info to the others with the `pushChatInfo` method
+				channelFound.then(function (channel) {
+					// `channel` is the chat channel
+					// if channel is already found
+					video.pushChatInfo('Connected');
+		            video.setupChatConversation(channel);
+		            channel.sendMessage('has joined'); // trigger messages from the participant with the `sendMessage` method    	
+				}, function (error) {
+					if (error.status == 404) {
+						// create channel if not found
+						chatClient.createChannel({
+							uniqueName: video.room,
+							friendlyName: 'General Channel'
+						}).then(function (channel) {
+							video.chatChannel = channel;
+							video.pushChatInfo('Connected');
+							video.setupChatConversation(channel);
+							channel.sendMessage('has joined');
+						});
+					}
+				});
+			});
+		}
+	});
+}
+```
+
+To disconnect the participant from chat channel, `channel.leave()` and to disconnect from the video conference itself, `room.disconnect()`.
 
 ## License
 
-The Laravel framework is open-sourced software licensed under the [MIT license](http://opensource.org/licenses/MIT).
-# healthkon-video-api
+Pay-as-you-go subscription model. Link coming soon.
