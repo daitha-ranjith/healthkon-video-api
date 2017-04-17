@@ -344,20 +344,20 @@ class VideoConference {
 
 	localPlayerControls() {
 		return `<div class='plyr__controls'>
-			    <button type='button' data-plyr='play'>
+			    <button type='button' data-plyr='play' title='Camera'>
 			        <svg><use xlink:href='#plyr-camera-off'></use></svg>
 			        <span class='plyr__sr-only'>Camera off</span>
 			    </button>
-			    <button type='button' data-plyr='pause'>
+			    <button type='button' data-plyr='pause' title='Camera'>
 			        <svg><use xlink:href='#plyr-camera'></use></svg>
 			        <span class='plyr__sr-only'>Camera on</span>
 			    </button>
-			    <button type='button' id='plyr-mic-mute'>
+			    <button type='button' id='plyr-mic-mute' title='Mic'>
 			        <svg class="plyr-mic-icon"><use xlink:href='#plyr-microphone'></use></svg>
 			        <svg class="plyr-mic-off-icon" style="display:none;"><use xlink:href='#plyr-microphone-off'></use></svg>
 			        <span class='plyr__sr-only'>Toggle Mute</span>
 			    </button>
-			    <button type='button' data-plyr='fullscreen'>
+			    <button type='button' data-plyr='fullscreen' title='Fullscreen'>
 			        <svg class='icon--exit-fullscreen'><use xlink:href='#plyr-exit-fullscreen'></use></svg>
 			        <svg><use xlink:href='#plyr-enter-fullscreen'></use></svg>
 			        <span class='plyr__sr-only'>Toggle Fullscreen</span>
@@ -367,20 +367,20 @@ class VideoConference {
 
 	remotePlayerControls() {
 		return `<div class='plyr__controls'>
-			    <button type='button' data-plyr='play'>
+			    <button type='button' data-plyr='play' title='Video'>
 			        <svg><use xlink:href='#plyr-play'></use></svg>
 			        <span class='plyr__sr-only'>Play</span>
 			    </button>
-			    <button type='button' data-plyr='pause'>
+			    <button type='button' data-plyr='pause' title='Video'>
 			        <svg><use xlink:href='#plyr-pause'></use></svg>
 			        <span class='plyr__sr-only'>Pause</span>
 			    </button>
-			    <button type='button' data-plyr='mute'>
+			    <button type='button' data-plyr='mute' title='Mute'>
 			        <svg class='icon--muted'><use xlink:href='#plyr-muted'></use></svg>
 			        <svg><use xlink:href='#plyr-volume'></use></svg>
 			        <span class='plyr__sr-only'>Toggle Mute</span>
 			    </button>
-			    <button type='button' data-plyr='fullscreen'>
+			    <button type='button' data-plyr='fullscreen' title='Fullscreen'>
 			        <svg class='icon--exit-fullscreen'><use xlink:href='#plyr-exit-fullscreen'></use></svg>
 			        <svg><use xlink:href='#plyr-enter-fullscreen'></use></svg>
 			        <span class='plyr__sr-only'>Toggle Fullscreen</span>
@@ -390,11 +390,11 @@ class VideoConference {
 
 	presenterPlayerControls() {
 		return `<div class='plyr__controls'>
-			    <button type='button' data-plyr='play'>
+			    <button type='button' data-plyr='play' title='Video'>
 			        <svg><use xlink:href='#plyr-play'></use></svg>
 			        <span class='plyr__sr-only'>Play</span>
 			    </button>
-			    <button type='button' data-plyr='pause'>
+			    <button type='button' data-plyr='pause' title='Video'>
 			        <svg><use xlink:href='#plyr-pause'></use></svg>
 			        <span class='plyr__sr-only'>Pause</span>
 			    </button>
@@ -406,7 +406,7 @@ class VideoConference {
 			        <span class='plyr__sr-only'>Duration</span>
 			        <span class='plyr__time--duration'>00:00</span>
 			    </span>
-			    <button type='button' data-plyr='mute'>
+			    <button type='button' data-plyr='mute' title='Mute'>
 			        <svg class='icon--muted'><use xlink:href='#plyr-muted'></use></svg>
 			        <svg><use xlink:href='#plyr-volume'></use></svg>
 			        <span class='plyr__sr-only'>Toggle Mute</span>
@@ -416,7 +416,7 @@ class VideoConference {
 			        <input id='volume{id}' class='plyr__volume--input' type='range' min='0' max='10' value='5' data-plyr='volume'>
 			        <progress class='plyr__volume--display' max='10' value='0' role='presentation'></progress>
 			    </span>
-			    <button type='button' data-plyr='fullscreen'>
+			    <button type='button' data-plyr='fullscreen' title='Fullscreen'>
 			        <svg class='icon--exit-fullscreen'><use xlink:href='#plyr-exit-fullscreen'></use></svg>
 			        <svg><use xlink:href='#plyr-enter-fullscreen'></use></svg>
 			        <span class='plyr__sr-only'>Toggle Fullscreen</span>
