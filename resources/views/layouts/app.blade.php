@@ -60,7 +60,7 @@
                                 </a>
                                 <ul class="dropdown-menu" role="menu">
                                     <li><a href="{{ route('account') }}">Account</a></li>
-                                    <li><a href="{{ route('account.billing') }}">Billing</a></li>
+                                    <!-- <li><a href="{{ route('account.billing') }}">Billing</a></li> -->
                                     <li><a href="{{ url('demo/conference') }}">Demo</a></li>
                                     <li>
                                         <a href="{{ route('logout') }}"
