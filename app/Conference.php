@@ -17,4 +17,19 @@ class Conference extends Model
     {
     	return $this->hasMany(Participant::class);
     }
+
+    public function duration()
+    {
+		return $this->participants->max('duration');
+    }
+
+    public function date()
+    {
+    	return $this->created_at->toFormattedDateString();
+    }
+
+    public function time()
+    {
+    	return $this->created_at->toTimeString();
+    }
 }

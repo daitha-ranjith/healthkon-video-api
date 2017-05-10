@@ -2,11 +2,20 @@
 
 namespace App\Http\Controllers;
 
+use App\Conference;
+
 class AccountController extends Controller
 {
     public function index()
     {
     	return view('account.index');
+    }
+
+    public function billing()
+    {
+        $conferences = Conference::with('participants')->paginate(10);
+
+        return view('billing')->withConferences($conferences);
     }
 
     public function resetApiToken()

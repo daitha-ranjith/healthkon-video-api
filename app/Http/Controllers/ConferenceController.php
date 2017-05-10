@@ -32,7 +32,11 @@ class ConferenceController extends Controller
             $conference_data = request()->only('user_id', 'room_sid', 'room_name');
             $participant_data = request()->only('participant', 'participant_sid');
 
-            $conference = Conference::firstOrCreate($conference_data);
+            $conference = Conference::where('room_sid', $conference_data['room_sid'])->first();
+
+            if ( ! $conference) {
+                $conference = Conference::create($conference_data);
+            }
 
             $participant_data['conference_id'] = $conference->id;
 
@@ -41,6 +45,7 @@ class ConferenceController extends Controller
             return 'OK';
         } catch (Exception $e) {
             Log::error("Connection Error: {$e->getMessage()}");
+
             return response("Unauthorized access.", 401);
         }
     }
@@ -55,6 +60,7 @@ class ConferenceController extends Controller
             if ( ! $participant) return response('Unauthorized access.', 401);
         } catch (Exception $e) {
             Log::error("Disconnection Error: {$e->getMessage()}");
+
             return response("Unauthorized access.", 401);
         }
 
