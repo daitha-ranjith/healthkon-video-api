@@ -64,7 +64,8 @@
 						    <label for="room-name">Enter the room name: </label>
 						    <input type="room-name" class="form-control" id="room-name" placeholder="room name..">
 						  </div>
-						  <button id="submit-button" type="submit" class="btn btn-success">Join</button>
+						  <button id="connect-button" type="submit" class="btn btn-success">Connect</button>
+						  <a href="#" id="disconnect-button" class="btn btn-danger disabled">Disconnect</a>
 						</form>
 
 						<hr>
@@ -102,6 +103,10 @@
 	<script src="{{ asset('public/sdk/video.1.1.min.js') }}"></script>
 
 	<script>
+		$('a#disconnect-button').click(function() {
+		    location.reload();
+		});
+
 		$('form#conference').submit(function (e) {
 			var room = $('#room-name').val();
 
@@ -109,6 +114,9 @@
 				alert('Enter a room name.');
 			} else {
 				e.preventDefault();
+
+				$('button#connect-button').attr('disabled', 'disabled');
+				$('a#disconnect-button').removeClass('disabled');
 
 				var identity = '{{ Auth::user()->email }}';
 
