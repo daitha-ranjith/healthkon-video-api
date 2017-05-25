@@ -32,6 +32,7 @@
                         </tbody>
                     </table>
 
+                    <div class="text-center">{{ $conferences->links() }}</div>
                 </div>
 
             </div>
