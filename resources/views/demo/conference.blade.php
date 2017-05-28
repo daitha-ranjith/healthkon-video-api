@@ -129,7 +129,7 @@
 					presenterVideoContainer: 'remote-video-container'
 				});
 
-				video.presenterInitiation(true);
+				video.presenterInitiation(false);
 				video.setConferenceTimeout(3600);
 
 				video.authorize('{{ $token }}').then(connected);
