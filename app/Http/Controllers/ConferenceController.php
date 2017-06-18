@@ -44,8 +44,6 @@ class ConferenceController extends Controller
 
             return 'OK';
         } catch (Exception $e) {
-            Log::error("Connection Error: {$e->getMessage()}");
-
             return response("Unauthorized access.", 401);
         }
     }
@@ -59,8 +57,6 @@ class ConferenceController extends Controller
 
             if ( ! $participant) return response('Unauthorized access.', 401);
         } catch (Exception $e) {
-            Log::error("Disconnection Error: {$e->getMessage()}");
-
             return response("Unauthorized access.", 401);
         }
 
