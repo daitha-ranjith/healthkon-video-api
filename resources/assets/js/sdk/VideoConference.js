@@ -80,10 +80,13 @@ class VideoConference {
 				wrapper.appendChild(video);
 				video.setAttribute('controls', true);
 				video.setAttribute('autoplay', true);
-				video.setAttribute('muted', true);
+				video.setAttribute('muted', 'muted');
 				video.setAttribute('id', track.id);
 				video.srcObject = track.mediaStream;
 				container.html(wrapper);
+
+				// set the local volume to 0 to avoid echo
+				localMedia.volume = 0;
 
 				$('body').prepend( this.controlIcons() );
 
