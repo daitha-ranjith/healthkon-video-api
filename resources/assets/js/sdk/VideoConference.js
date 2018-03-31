@@ -71,10 +71,11 @@ class VideoConference {
 
 	attachLocalVideo(localMedia) {
 		const container = $(this.localVideoContainer);
+		const wrapper = document.createElement('div');
+		const video = document.createElement('video');
 
 		localMedia.tracks.forEach((track) => {
-			const wrapper = document.createElement('div');
-			const video = document.createElement('video');
+
 
 			if (track.kind == 'video') {
 				wrapper.appendChild(video);
@@ -118,6 +119,10 @@ class VideoConference {
 			}
 
 		});
+
+		let v = document.querySelector('#local-video-container video.muteThisVideo');
+		v.muted = true;
+		v.volume = 0;
 	}
 
 	joinRoom(room) {
