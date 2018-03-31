@@ -80,20 +80,19 @@ class VideoConference {
 				wrapper.appendChild(video);
 				video.setAttribute('controls', true);
 				video.setAttribute('autoplay', true);
-				video.setAttribute('muted', 'muted');
 				video.setAttribute('id', track.id);
 				video.srcObject = track.mediaStream;
 				container.html(wrapper);
-
-				// set the local volume to 0 to avoid echo
-				localMedia.volume = 0;
+				video.volume = 0;
+				video.muted = true;
 
 				$('body').prepend( this.controlIcons() );
 
 				const controls = this.localPlayerControls();
 
 				const player = plyr.setup(video, {
-					html: controls
+					html: controls,
+					volume: 0
 				});
 
 				player[0].on('play', function (event) {
