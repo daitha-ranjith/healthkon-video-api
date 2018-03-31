@@ -86,7 +86,6 @@ class VideoConference {
 				video.setAttribute('class', 'muteThisVideo')
 				video.srcObject = track.mediaStream;
 				container.html(wrapper);
-				video.volume = 0;
 
 				$('body').prepend( this.controlIcons() );
 
@@ -122,15 +121,11 @@ class VideoConference {
 
 		let v = document.querySelector('#local-video-container video.muteThisVideo');
 		v.muted = true;
-		v.volume = 0;
+
 	}
 
 	joinRoom(room) {
 		const localParticipant = room.localParticipant;
-
-		// let v = document.querySelector('.muteThisVideo');
-		// v.muted = true;
-		// v.volume = 0;
 
 		// check for presenter initiation
 		if (this.presenterInitiation) {
