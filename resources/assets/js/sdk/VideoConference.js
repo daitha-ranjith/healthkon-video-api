@@ -83,16 +83,15 @@ class VideoConference {
 				video.setAttribute('id', track.id);
 				video.srcObject = track.mediaStream;
 				container.html(wrapper);
-				video.volume = 0;
 				video.muted = true;
+				video.volume = 0;
 
 				$('body').prepend( this.controlIcons() );
 
 				const controls = this.localPlayerControls();
 
 				const player = plyr.setup(video, {
-					html: controls,
-					volume: 0
+					html: controls
 				});
 
 				player[0].on('play', function (event) {
