@@ -123,9 +123,9 @@ class VideoConference {
 	joinRoom(room) {
 		const localParticipant = room.localParticipant;
 
-		let v = document.querySelector('.muteThisVideo');
-		v.muted = true;
-		v.volume = 0;
+		// let v = document.querySelector('.muteThisVideo');
+		// v.muted = true;
+		// v.volume = 0;
 
 		// check for presenter initiation
 		if (this.presenterInitiation) {
